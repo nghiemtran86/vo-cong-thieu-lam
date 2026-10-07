@@ -37,7 +37,7 @@ main{max-width:1200px;margin:0 auto;padding:12px 14px 28px}
 <header><h1>Võ Lâm Truyền Kỳ 3D</h1><p>Tra cứu chiêu thức theo nội công môn phái</p></header>
 <div class="bar"><div>
 <input id="q" type="search" placeholder="Tìm chiêu thức hoặc nội dung…" autocomplete="off">
-<div class="chips" id="fp"></div><div class="chips" id="fs"></div><div class="chips" id="fn"></div>
+<div class="chips" id="fp"></div><div class="chips" id="fn"></div>
 </div></div>
 <main><p id="count"></p><div class="grid" id="grid"></div></main>
 <script>
@@ -48,7 +48,7 @@ const all=DATA.flatMap(s=>s.skills.map(k=>({...k,set:s.name,phai:s.phai,sub:s.su
 let st={q:"",phai:"",set:"",nc:""};
 function chips(id,opts,key,label){
   const el=document.getElementById(id);
-  el.innerHTML=[["",label]].concat(opts.map(o=>[o,o])).map(([v,t])=>`<button class="chip${st[key]===v?" on":""}" data-v="${esc(v)}">${esc(t)}</button>`).join("");
+  el.innerHTML=[["",label]].concat(opts.map(o=>Array.isArray(o)?o:[o,o])).map(([v,t])=>`<button class="chip${st[key]===v?" on":""}" data-v="${esc(v)}">${esc(t)}</button>`).join("");
   el.onclick=e=>{const b=e.target.closest(".chip");if(!b)return;st[key]=b.dataset.v;if(key==="phai"){st.set="";st.nc=""}draw()};
 }
 function card(k){
@@ -59,16 +59,16 @@ function card(k){
   <p class="desc">${esc(k.mota)}</p>
   ${k.extra.length?`<div class="ext"><ul>${k.extra.map(e=>`<li>${esc(e)}</li>`).join("")}</ul></div>`:""}</article>`;
 }
+const TAX=[["Thiếu Lâm",["Dịch Cân Kinh","Tẩy Tủy Kinh"]],["Thất Tú",["Băng Tâm Quyết","Vân Thường Tâm Kinh"]],["Vạn Hoa",["Hoa Gian Du","Ly Kinh Dịch Đạo"]],["Thuần Dương",["Tử Hà Công","Thái Hư Kiếm Ý"]],["Thiên Sách",["Ngạo Huyết Chiến Ý","Thiết Lao Luật"]],["Tàng Kiếm",["Vấn Thủy Quyết","Sơn Cư Kiếm Ý"]],["Ngũ Độc",["Độc Kinh","Bổ Thiên Quyết"]],["Đường Môn",["Kinh Vũ Quyết","Thiên La Ngụy Đạo"]],["Minh Giáo",["Phần Ảnh Thánh Quyết","Minh Tôn Lưu Ly Thể"]],["Cái Bang",["Tiếu Trần Quyết"]]];
 function draw(){
-  const inP=k=>!st.phai||k.phai===st.phai;
-  chips("fp",[...new Set(DATA.map(s=>s.phai))],"phai","Mọi phái");
-  chips("fs",DATA.filter(s=>!st.phai||s.phai===st.phai).map(s=>s.name),"set","Tất cả bộ");
-  chips("fn",[...new Set(all.filter(inP).map(k=>k.nc))],"nc","Mọi nội công");
+  const ncs=st.phai?TAX.find(t=>t[0]===st.phai)[1]:TAX.flatMap(t=>t[1]);
+  chips("fp",TAX.map(t=>[t[0],t[2]?t[0]+" ("+t[2]+")":t[0]]),"phai","Mọi môn phái");
+  chips("fn",ncs,"nc","Mọi nội công");
   const q=norm(st.q.trim());
-  const r=all.filter(k=>inP(k)&&(!st.set||k.set===st.set)&&(!st.nc||k.nc===st.nc)&&(!q||k.key.includes(q)));
+  const generic=k=>/^Nội công /.test(k.nc);
+  const r=all.filter(k=>(!st.phai||k.phai===st.phai)&&(!st.nc||k.nc===st.nc||(generic(k)&&TAX.some(t=>t[1].includes(st.nc)&&t[0]===k.phai)))&&(!q||k.key.includes(q)));
   document.getElementById("count").textContent=r.length+" chiêu thức";
-  document.getElementById("grid").innerHTML=r.length?r.map(card).join(""):"";
-  if(!r.length)document.getElementById("grid").innerHTML='<p class="empty">Không tìm thấy chiêu thức phù hợp.</p>';
+  document.getElementById("grid").innerHTML=r.length?r.map(card).join(""):'<p class="empty">Không tìm thấy chiêu thức phù hợp.</p>';
 }
 document.getElementById("q").addEventListener("input",e=>{st.q=e.target.value;draw()});
 draw();
