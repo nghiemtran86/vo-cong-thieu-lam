@@ -59,7 +59,7 @@ function card(k){
   <p class="desc">${esc(k.mota)}</p>
   ${k.extra.length?`<div class="ext"><ul>${k.extra.map(e=>`<li>${esc(e)}</li>`).join("")}</ul></div>`:""}</article>`;
 }
-const TAX=[["Thiếu Lâm",["Dịch Cân Kinh","Tẩy Tủy Kinh","Nội công Thiếu Lâm"]],["Thất Tú",["Băng Tâm Quyết","Vân Thường Tâm Kinh","Nội công Thất Tú"]],["Vạn Hoa",["Hoa Gian Du","Ly Kinh Dịch Đạo","Nội công Vạn Hoa"]],["Thuần Dương",["Tử Hà Công","Thái Hư Kiếm Ý"]],["Thiên Sách",["Ngạo Huyết Chiến Ý","Thiết Lao Luật"]],["Tàng Kiếm",["Vấn Thủy Quyết","Sơn Cư Kiếm Ý"]],["Ngũ Độc",["Độc Kinh","Bổ Thiên Quyết"]],["Đường Môn",["Kinh Vũ Quyết","Thiên La Ngụy Đạo"]],["Minh Giáo",["Phần Ảnh Thánh Quyết","Minh Tôn Lưu Ly Thể"]],["Cái Bang",["Tiếu Trần Quyết"]]];
+const TAX=[["Thiếu Lâm",["Dịch Cân Kinh","Tẩy Tủy Kinh","Nội công Thiếu Lâm"]],["Thất Tú",["Băng Tâm Quyết","Vân Thường Tâm Kinh","Nội công Thất Tú"]],["Vạn Hoa",["Hoa Gian Du","Ly Kinh Dịch Đạo","Nội công Vạn Hoa"]],["Thuần Dương",["Nội công Thuần Dương","Tử Hà Công","Thái Hư Kiếm Ý"]],["Thiên Sách",["Ngạo Huyết Chiến Ý","Thiết Lao Luật"]],["Tàng Kiếm",["Vấn Thủy Quyết","Sơn Cư Kiếm Ý"]],["Ngũ Độc",["Độc Kinh","Bổ Thiên Quyết"]],["Đường Môn",["Kinh Vũ Quyết","Thiên La Ngụy Đạo"]],["Minh Giáo",["Phần Ảnh Thánh Quyết","Minh Tôn Lưu Ly Thể"]],["Cái Bang",["Tiếu Trần Quyết"]]];
 function draw(){
   const ncs=st.phai?TAX.find(t=>t[0]===st.phai)[1]:TAX.flatMap(t=>t[1]);
   chips("fp",TAX.map(t=>[t[0],t[2]?t[0]+" ("+t[2]+")":t[0]]),"phai","Mọi môn phái");
